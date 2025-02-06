@@ -1,72 +1,101 @@
-import express from 'express';
+import Task from '../models/task.js';
+import { validationResult } from 'express-validator';
 
-let tasks = [];
+// Create a new task
+export const createTask = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-//get all tasks
-// Get all tasks with optional limit
-export const getAllTasks = (req, res, next) => {
     try {
-        // Get the 'limit' query parameter (default is all tasks)
-        const limit = parseInt(req.query.limit, 10);
+        const { title, description, betAmount, duration } = req.body;
 
-        // Validate limit (should be a positive number)
-        if (limit && (isNaN(limit) || limit <= 0)) {
-            return res.status(400).json({ message: 'Invalid limit value. Must be a positive number.' });
-        }
+        const task = await Task.create({
+            title,
+            description,
+            betAmount,
+            duration,
+            creator: req.user._id // The authenticated user is the creator
+        });
 
-        // Return all tasks or a limited number
-        const result = limit ? tasks.slice(0, limit) : tasks;
-        res.status(200).json(result);
+        res.status(201).json(task);
     } catch (error) {
-        console.error('Error fetching tasks:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
-
-
-// Get a task by ID
-export const getTask = (req, res, next) => {
-    // Extract task ID from request parameters
-    const taskId = req.params.id;
-    // Find task in the array
-    const task = tasks.find(t => t.id === taskId);
-    if (task) {
-        // If task is found, send task data
-        res.status(200).json(task);
-    } else {
-        // If task is not found, send 404 status
-        res.status(404).json({ message: 'Task not found' });
+// Get all tasks
+export const getAllTasks = async (req, res) => {
+    try {
+        const tasks = await Task.find({}).populate('creator', 'name email'); // Populate creator details
+        res.json(tasks);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
-// Create a new task
-export const createTask = (req, res, next) => {
-    // Create a new task object from request body
-    const newTask = {
-        id: tasks.length + 1,
-        title: req.body.title,
-        description: req.body.description
-    };
-    // Add new task to the array
-    tasks.push(newTask);
-    // Send the created task data with 201 status
-    res.status(201).json(newTask);
-}
-
-// Delete a task by ID
-export const deleteTask = (req, res, next) => {
-    // Extract task ID from request parameters
-    const taskId = req.params.id;
-    // Find index of the task in the array
-    const taskIndex = tasks.findIndex(t => t.id === taskId);
-    if (taskIndex !== -1) {
-        // Remove task from the array
-        tasks.splice(taskIndex, 1);
-        // Send 204 status to indicate successful deletion
-        res.status(204).send();
-    } else {
-        // If task is not found, send 404 status
-        res.status(404).json({ message: 'Task not found' });
+// Get task by ID
+export const getTaskById = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id).populate('creator', 'name email');
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.json(task);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
-}
+};
+
+// Update a task
+export const updateTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        // Ensure the task creator is the one updating the task
+        if (task.creator.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Not authorized' });
+        }
+
+        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+
+        res.json(updatedTask);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Delete a task
+export const deleteTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        // Ensure the task creator is the one deleting the task
+        if (task.creator.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Not authorized' });
+        }
+
+        await Task.findByIdAndDelete(req.params.id);
+
+        res.json({ message: 'Task deleted' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

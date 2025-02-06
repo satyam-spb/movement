@@ -1,20 +1,10 @@
-import exp from 'constants';
+// backend/routes/userRoutes.js
 import express from 'express';
-import { getUser,createUser,updateUser, deleteUser } from "../controllers/userController";
+import { registerUser, getUserProfile } from '../controllers/userController.js';
 
-const userRouter = express.Router();
+const userRoutes = express.Router();
 
-//GET user data
-userRouter.get('/',getUser);
+userRoutes.post('/register', registerUser);
+userRoutes.get('/profile', getUserProfile);
 
-//POST user data (create new user)
-userRouter.post('/',createUser);
-
-
-//Update user data
-userRouter.put('/',updateUser);
-
-//delete user
-userRouter.delete('/',deleteUser);
-
-export default userRouter;
+export default userRoutes;
