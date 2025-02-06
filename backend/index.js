@@ -1,27 +1,35 @@
-// import exp from 'constants';
+// backend/index.js
 import express from 'express';
-import path from 'path';
-import logger from './middlewares/logger';
-import url from 'url';
-import userRouter from './routes/userRoutes';
-import taskRouter from './routes/taskRoutes';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import morgan from 'morgan';
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import path from 'path'
+import { fileURLToPath } from 'url';
 
-const PORT = process.env.PORT || 8080;
+import userRoutes from './routes/userRoutes.js';
 
-const app = express();  
-
-app.use(express.json());
-app.use(express.urlencoded({extended : false}));
-
-app.use(logger);
-
-const __filename = url.fileURLToPath(import.meta.url);  
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use('/profile',userRouter);
-app.use('/tasks',taskRouter);
+dotenv.config({ path: path.join(__dirname, '../.env') })
 
-app.listen(PORT, () => {
-    console.log(`Server running on PORT : ${PORT}`);
-    
-})
+const app = express();
+const port = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors());
+app.use(express.json()); // for parsing application/json
+app.use(morgan('dev')); // for logging
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
+// Routes
+app.use('/api/users', userRoutes);
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});

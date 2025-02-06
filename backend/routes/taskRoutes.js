@@ -1,18 +1,36 @@
 import express from 'express';
-import { getAllTasks, getTask, createTask, deleteTask } from "../controllers/taskController.js";
+import {
+    createTask,
+    getAllTasks,
+    getTaskById,
+    updateTask,
+    deleteTask
+} from '../controllers/taskController.js';
+import { authenticateToken } from '../middlewares/authMiddleware.js';
+import { body } from 'express-validator';
 
-const taskRouter = express.Router();
+const taskRoutes = express.Router();
 
-//get all tasks
-taskRouter.get('/',getAllTasks);
+// Validation rules for task creation
+const taskValidationRules = [
+    body('title').notEmpty().withMessage('Title is required'),
+    body('betAmount').isNumeric().withMessage('Bet amount must be a number'),
+    body('duration').isNumeric().withMessage('Duration must be a number')
+];
 
-//get a single task info
-taskRouter.get('/:id',getTask);
+// Create a new task (protected route)
+taskRoutes.post('/', authenticateToken, taskValidationRules, createTask);
 
-//POST(Create new Task)
-taskRouter.post('/',createTask);
+// Get all tasks
+taskRoutes.get('/', authenticateToken, getAllTasks);
 
-//Delete Task
-taskRouter.delete('/:id',deleteTask);
+// Get task by ID
+taskRoute.get('/:id', authenticateToken, getTaskById);
 
-export default taskRouter;
+// Update a task (protected route)
+taskRoutes.put('/:id', authenticateToken, updateTask);
+
+// Delete a task (protected route)
+taskRoutes.delete('/:id', authenticateToken, deleteTask);
+
+export default taskRoutes;
