@@ -1,0 +1,395 @@
+/* Import Google Fonts for better typography */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #0b2e2d, #092d2b);
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Bet Container */
+.bet-container {
+    background: linear-gradient(135deg, #0e3533, #1a5a58);
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 1.5rem 4rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+}
+
+.bet-container:hover {
+    transform: scale(1.005);
+}
+
+/* Heading */
+.bet-container h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f39c12;
+    /* text-shadow: 2px 2px 10px rgba(255, 165, 0, 0.5); */
+    margin-bottom: 15px;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 5px;
+    color: #f1c40f;
+}
+
+/* Input Fields */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Placeholder Styling */
+input::placeholder, textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Create Bet Button */
+.create-bet-btn {
+    background: linear-gradient(45deg, #f39c12, #e67e22);
+    color: white;
+    font-size: 1.2rem;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-weight: bold;
+    /* box-shadow: 0 5px 15px rgba(243, 156, 18, 0.5); */
+}
+
+.create-bet-btn:hover {
+    background: linear-gradient(45deg, #e67e22, #d35400);
+    transform: scale(1.07);
+    box-shadow: 0 7px 20px rgba(230, 126, 34, 0.6);
+}
+
+/* Bet Preview */
+/* Bet Preview - Glassmorphism Effect */
+.bet-preview {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15); /* Glass effect */
+    backdrop-filter: blur(10px); /* Blur effect for glass look */
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: all 0.4s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-in-out forwards;
+}
+
+/* Bet Preview Heading */
+.bet-preview h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f1c40f;
+    /* text-shadow: 2px 2px 8px rgba(255, 165, 0, 0.5); */
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+/* Bet Preview Text */
+.bet-preview p {
+    font-size: 1.2rem;
+    margin: 8px 0;
+    font-weight: 500;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+/* Highlight on Hover */
+.bet-preview p:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.01);
+}
+
+/* Span for Dynamic Values */
+.bet-preview span {
+    font-weight: bold;
+    color: #ffcc00;
+}
+/* Bet Preview - Glassmorphism Effect */
+.bet-preview {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 98%;
+    width: 100%;
+    max-height: 60vh;
+    overflow-y: auto;
+    transition: all 0.4s ease-in-out;
+}
+
+/* Bet Preview Text - Prevent Overflow */
+.bet-preview p {
+    font-size: 1.2rem;
+    margin: 8px 0;
+    font-weight: 500;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 8px;
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* word-break: break-word; */
+    white-space: normal;
+}
+
+/* Fix Overflow for Description */
+#preview-desc {
+    display: block;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-height: 100px; /* Adjust height as needed */
+    overflow-y: auto;
+    padding-right: 5px; /* Prevent text cutting */
+}
+
+/* Optional: Add Scrollbar for Long Text */
+#preview-desc::-webkit-scrollbar {
+    width: 5px;
+}
+
+#preview-desc::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+    .bet-preview {
+        max-width: 95%;
+        max-height: 50vh;
+    }
+
+    .bet-preview p {
+        font-size: 1rem;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 500px) {
+    .bet-preview {
+        max-height: 45vh;
+    }
+
+    .bet-preview p {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+    }
+
+    #preview-desc {
+        max-height: 80px; /* Reduce height for smaller screens */
+    }
+}
+
+
+/* Fade-in Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .bet-preview {
+        padding: 18px;
+    }
+
+    .bet-preview h3 {
+        font-size: 1.5rem;
+    }
+
+    .bet-preview p {
+        font-size: 1rem;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 500px) {
+    .bet-preview {
+        padding: 15px;
+    }
+
+    .bet-preview h3 {
+        font-size: 1.3rem;
+    }
+
+    .bet-preview p {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .bet-container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .bet-container h2 {
+        font-size: 1.8rem;
+    }
+
+    input, textarea {
+        font-size: 0.95rem;
+        padding: 10px;
+    }
+
+    .create-bet-btn {
+        font-size: 1rem;
+        padding: 12px 25px;
+    }
+}
+
+/* Extra Small Screens (Below 500px) */
+@media (max-width: 500px) {
+    .bet-container {
+        width: 98%;
+        padding: 18px;
+    }
+
+    .bet-container h2 {
+        font-size: 1.6rem;
+    }
+
+    label {
+        font-size: 1rem;
+    }
+
+    input, textarea {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    .create-bet-btn {
+        font-size: 0.95rem;
+        padding: 10px 20px;
+    }
+
+    .bet-preview h3 {
+        font-size: 1.4rem;
+    }
+
+    .bet-preview p {
+        font-size: 1rem;
+    }
+}
+
+/* Group Code Styling */
+.group-code {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    text-align: center;
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1), 0 3px 7px rgba(0, 0, 0, 0.4);
+    width: 98.3%;
+}
+
+.group-code p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffa500;
+    word-break: break-word;
+}
+
+/* Buttons */
+#copy-code-btn, #share-code-btn {
+    background: linear-gradient(45deg, #f39c12, #e67e22);
+    color: white;
+    font-size: 1rem;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin: 8px 5px;
+}
+
+#copy-code-btn:hover, #share-code-btn:hover {
+    background: linear-gradient(45deg, #e67e22, #d35400);
+    transform: scale(1.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .group-code p {
+        font-size: 1rem;
+    }
+    #copy-code-btn, #share-code-btn {
+        font-size: 0.9rem;
+        padding: 6px 15px;
+    }
+}
+
+@media (max-width: 500px) {
+    .group-code {
+        padding: 10px;
+    }
+    .group-code p {
+        font-size: 0.9rem;
+    }
+    #copy-code-btn, #share-code-btn {
+        font-size: 0.85rem;
+        padding: 5px 12px;
+    }
+}
