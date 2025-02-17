@@ -2,6 +2,7 @@ import CreateBet from "./components/CreateBet";
 import Home from "./components/Home";
 import LoginPage from "./components/LoginPage";
 import WalletConnectButton from "./components/WalletConnectButton";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 function App() {
