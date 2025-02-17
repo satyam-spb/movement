@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import './styles/home.css'
-import './fontawesome'
+import './styles/home.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const Home = () => {
   // Theme state
@@ -123,13 +124,13 @@ const Home = () => {
             ))}
             <li><a href="#"><button>Contact Us</button></a></li>
             <li onClick={() => setSidebarOpen(true)}>
-              <a href="#"><FontAwesomeIcon icon="bars" /></a>
+              <a href="#"><FontAwesomeIcon icon="fa-solid fa-bars" /></a>
             </li>
           </ul>
           
           <ul className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
             <li onClick={() => setSidebarOpen(false)}>
-              <a href="#"><FontAwesomeIcon icon="xmark" /></a>
+              <a href="#"><FontAwesomeIcon icon="fa-regular fa-circle-xmark" /></a>
             </li>
             {['Home', 'Services', 'Blog', 'About-Us'].map((item) => (
               <li key={item}><a href="#">{item}</a></li>
@@ -148,22 +149,22 @@ const Home = () => {
           
           <h4 className="section-title">Popular</h4>
           <ul className="sports-list">
-            <li><FontAwesomeIcon icon="futbol" /><span>Soccer</span></li>
-            <li><FontAwesomeIcon icon="table-tennis" /><span>Tennis</span></li>
-            <li><FontAwesomeIcon icon="basketball" /><span>Basketball</span></li>
-            <li><FontAwesomeIcon icon="cricket" /><span>Cricket</span></li>
-            <li><FontAwesomeIcon icon="football" /><span>American Football</span></li>
+            <li><FontAwesomeIcon icon="fa-solid fa-futbol" /><span>Soccer</span></li>
+            <li><FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" /><span>Tennis</span></li>
+            <li><FontAwesomeIcon icon="fa-solid fa-basketball" /><span>Basketball</span></li>
+            <li><FontAwesomeIcon icon="fa-solid fa-baseball-bat-ball" /><span>Cricket</span></li>
+            <li><FontAwesomeIcon icon="fa-solid fa-football" /><span>American Football</span></li>
           </ul>
 
           <h4 className="section-title">Other</h4>
           <ul className="sports-list">
-            <li><FontAwesomeIcon icon="hockey-puck" />Ice Hockey</li>
-            <li><FontAwesomeIcon icon="volleyball" />Volleyball</li>
-            <li><FontAwesomeIcon icon="hand-rock" />Handball</li>
-            <li><FontAwesomeIcon icon="table-tennis" />Table Tennis</li>
-            <li><FontAwesomeIcon icon="dumbbell" />Wrestling</li>
-            <li><FontAwesomeIcon icon="squash" />Squash</li>
-            <li><FontAwesomeIcon icon="dart" />Darts</li>
+            <li><FontAwesomeIcon icon="fa-solid fa-hockey-puck" />Ice Hockey</li>
+            <li><FontAwesomeIcon icon="fa-solid fa-volleyball" />Volleyball</li>
+            <li><FontAwesomeIcon icon="fa-regular fa-hand-back-fist" />Handball</li>
+            <li><FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" />Table Tennis</li>
+            <li><FontAwesomeIcon icon="fa-solid fa-dumbbell" />Wrestling</li>
+            <li><FontAwesomeIcon icon="fa-solid fa-handshake-slash" />Squash</li>
+            <li><FontAwesomeIcon icon="fa-brands fa-dart-lang" />Darts</li>
           </ul>
         </div>
 
@@ -250,7 +251,7 @@ const Home = () => {
               placedBets.map((bet) => (
                 <div key={bet.date} className={`bet-result ${bet.status}`}>
                   <p>
-                    <FontAwesomeIcon icon="hourglass-half" />
+                  <FontAwesomeIcon icon="fa-solid fa-hourglass-half" />
                     Placed Bet - {bet.title}
                   </p>
                   <span className="reward">Amount: ${bet.amount}</span>
@@ -274,14 +275,14 @@ const Home = () => {
           <div className="previous-bets">
             <div className="bet-result won">
               <p>
-                <FontAwesomeIcon icon="trophy" />
+              <FontAwesomeIcon icon="fa-solid fa-trophy" />
                 Bet 1: WON - LinkedIn Post Reactions
               </p>
               <span className="reward">Reward: $500</span>
             </div>
             <div className="bet-result lost">
               <p>
-                <FontAwesomeIcon icon="times-circle" />
+              <FontAwesomeIcon icon="fa-regular fa-circle-xmark" />
                 Bet 2: LOST - Instagram Story Views
               </p>
               <span className="reward">Loss: $200</span>
