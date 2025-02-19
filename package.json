@@ -16,7 +16,10 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@privy-io/react-auth": "^2.4.3",
+<<<<<<< HEAD
     "@razorlabs/razorkit": "^1.0.10",
+=======
+>>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

@@ -3,8 +3,11 @@ import './styles/home.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import api from '../api.js';
 import { usePrivy } from '@privy-io/react-auth';
+<<<<<<< HEAD
 import { ConnectButton, WalletProvider } from "@razorlabs/razorkit";
 
+=======
+>>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
 
 const Home = () => {
     const { user, authenticated } = usePrivy();
@@ -22,7 +25,10 @@ const Home = () => {
     const [rewardData, setRewardData] = useState(null); // Reward data state
     const [tasks, setTasks] = useState([]);
     const [selectedTrustworthyPerson, setSelectedTrustworthyPerson] = useState({});
+<<<<<<< HEAD
     const { logout } = usePrivy();
+=======
+>>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
 
     // Fetch user profile and tasks
     useEffect(() => {
@@ -150,6 +156,7 @@ const Home = () => {
                 >
                     {darkMode ? '☀️' : '🌙'}
                 </button>
+<<<<<<< HEAD
                 <button
                     className="logout-btn"
                     onClick={async () => {
@@ -165,6 +172,8 @@ const Home = () => {
                     Logout
                 </button>
 
+=======
+>>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
                 <nav>
                     <ul className="navlinks">
                         {['Home', 'Services', 'Blog', 'About-Us'].map((item) => (
@@ -220,7 +229,10 @@ const Home = () => {
 
                 <div className="right-section">
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
                     {/* Display User Reward Data */}
                     <h3>User Reward Data</h3>
                     {rewardData ? (
