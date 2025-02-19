@@ -3,12 +3,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import morgan from 'morgan';
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import * as dotenv from 'dotenv' 
 import path from 'path'
 import { fileURLToPath } from 'url';
 
 import userRoutes from './routes/userRoutes.js';
-
+import taskRoutes from './routes/taskRoutes.js'; 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -29,6 +29,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes); 
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
