@@ -1,4 +1,5 @@
 /* General Reset */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 * {
     margin: 0;
     padding: 0;
@@ -361,7 +362,7 @@ a:hover {
   .social-links:hover{
     color: whitesmoke !important;
   }
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+  
   .logo {
     position: absolute;
     left: 20px;

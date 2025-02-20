@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import './styles/home.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faBars,faFutbol, faTableTennisPaddleBall, faBasketball, faBaseballBatBall, faFootball,faHockeyPuck,faVolleyball,faHandBackFist,faDumbbell,faHandshakeSlash,faArrowsToCircle,faHourglassHalf,faTrophy} from '@fortawesome/free-solid-svg-icons';
+import {faCircleXmark} from '@fortawesome/free-regular-svg-icons';
 import api from '../api.js';
 import { usePrivy } from '@privy-io/react-auth';
-<<<<<<< HEAD
 import { ConnectButton, WalletProvider } from "@razorlabs/razorkit";
 
-=======
->>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
 
 const Home = () => {
     const { user, authenticated } = usePrivy();
@@ -25,10 +24,7 @@ const Home = () => {
     const [rewardData, setRewardData] = useState(null); // Reward data state
     const [tasks, setTasks] = useState([]);
     const [selectedTrustworthyPerson, setSelectedTrustworthyPerson] = useState({});
-<<<<<<< HEAD
     const { logout } = usePrivy();
-=======
->>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
 
     // Fetch user profile and tasks
     useEffect(() => {
@@ -156,7 +152,6 @@ const Home = () => {
                 >
                     {darkMode ? '☀️' : '🌙'}
                 </button>
-<<<<<<< HEAD
                 <button
                     className="logout-btn"
                     onClick={async () => {
@@ -172,8 +167,6 @@ const Home = () => {
                     Logout
                 </button>
 
-=======
->>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
                 <nav>
                     <ul className="navlinks">
                         {['Home', 'Services', 'Blog', 'About-Us'].map((item) => (
@@ -183,13 +176,13 @@ const Home = () => {
                         ))}
                         <li><a href="#"><button>Contact Us</button></a></li>
                         <li onClick={() => setSidebarOpen(true)}>
-                            <a href="#"><FontAwesomeIcon icon="fa-solid fa-bars" /></a>
+                            <a href="#"><FontAwesomeIcon icon={faBars} /></a>
                         </li>
                     </ul>
 
                     <ul className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
                         <li onClick={() => setSidebarOpen(false)}>
-                            <a href="#"><FontAwesomeIcon icon="fa-regular fa-circle-xmark" /></a>
+                            <a href="#"><FontAwesomeIcon icon={faCircleXmark} /></a>
                         </li>
                         {['Home', 'Services', 'Blog', 'About-Us'].map((item) => (
                             <li key={item}><a href="#">{item}</a></li>
@@ -208,31 +201,27 @@ const Home = () => {
 
                     <h4 className="section-title">Popular</h4>
                     <ul className="sports-list">
-                        <li><FontAwesomeIcon icon="fa-solid fa-futbol" /><span>Soccer</span></li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" /><span>Tennis</span></li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-basketball" /><span>Basketball</span></li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-baseball-bat-ball" /><span>Cricket</span></li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-football" /><span>American Football</span></li>
+                        <li><FontAwesomeIcon icon={faFutbol} /><span>Soccer</span></li>
+                        <li><FontAwesomeIcon icon={faTableTennisPaddleBall} /><span>Tennis</span></li>
+                        <li><FontAwesomeIcon icon={faBasketball} /><span>Basketball</span></li>
+                        <li><FontAwesomeIcon icon={faBaseballBatBall} /><span>Cricket</span></li>
+                        <li><FontAwesomeIcon icon={faFootball} /><span>American Football</span></li>
                     </ul>
 
                     <h4 className="section-title">Other</h4>
                     <ul className="sports-list">
-                        <li><FontAwesomeIcon icon="fa-solid fa-hockey-puck" />Ice Hockey</li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-volleyball" />Volleyball</li>
-                        <li><FontAwesomeIcon icon="fa-regular fa-hand-back-fist" />Handball</li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" />Table Tennis</li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-dumbbell" />Wrestling</li>
-                        <li><FontAwesomeIcon icon="fa-solid fa-handshake-slash" />Squash</li>
-                        <li><FontAwesomeIcon icon="fa-brands fa-dart-lang" />Darts</li>
+                        <li><FontAwesomeIcon icon={faHockeyPuck} />Ice Hockey</li>
+                        <li><FontAwesomeIcon icon={faVolleyball} />Volleyball</li>
+                        <li><FontAwesomeIcon icon={faHandBackFist} />Handball</li>
+                        <li><FontAwesomeIcon icon={faTableTennisPaddleBall} />Table Tennis</li>
+                        <li><FontAwesomeIcon icon={faDumbbell} />Wrestling</li>
+                        <li><FontAwesomeIcon icon={faHandshakeSlash} />Squash</li>
+                        <li><FontAwesomeIcon icon={faArrowsToCircle} />Darts</li>
                     </ul>
                 </div>
 
                 <div className="right-section">
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 3f8fae7eeeb8928daaf508437b53b2806baec909
                     {/* Display User Reward Data */}
                     <h3>User Reward Data</h3>
                     {rewardData ? (
@@ -339,7 +328,7 @@ const Home = () => {
                             placedBets.map((bet) => (
                                 <div key={bet.date} className={`bet-result ${bet.status}`}>
                                     <p>
-                                        <FontAwesomeIcon icon="fa-solid fa-hourglass-half" />
+                                    <FontAwesomeIcon icon={faHourglassHalf} />
                                         Placed Bet - {bet.title}
                                     </p>
                                     <span className="reward">Amount: ${bet.amount}</span>
@@ -363,14 +352,14 @@ const Home = () => {
                     <div className="previous-bets">
                         <div className="bet-result won">
                             <p>
-                                <FontAwesomeIcon icon="fa-solid fa-trophy" />
+                            <FontAwesomeIcon icon={faTrophy} />
                                 Bet 1: WON - LinkedIn Post Reactions
                             </p>
                             <span className="reward">Reward: $500</span>
                         </div>
                         <div className="bet-result lost">
                             <p>
-                                <FontAwesomeIcon icon="fa-regular fa-circle-xmark" />
+                                <FontAwesomeIcon icon={faCircleXmark} />
                                 Bet 2: LOST - Instagram Story Views
                             </p>
                             <span className="reward">Loss: $200</span>
