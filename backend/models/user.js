@@ -10,7 +10,7 @@ const rewardModelSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    privyUserId: { type: String, required: true, unique: true },
+    privyId: { type: String, required: true, unique: true },
     createdAt: { type: Date, default: Date.now },
     rewardModel: { type: rewardModelSchema, default: () => ({}) } // Embed the reward model
 });

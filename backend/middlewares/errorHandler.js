@@ -1,11 +1,15 @@
-// Middleware for error handling
-const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+
+export const errorHandler = (err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'Server error' : err.message;
+  
   res.status(statusCode).json({
-      message: err.message,
-      stack: process.env.NODE_ENV === 'production' ? null : err.stack
+    error: {
+      code: statusCode,
+      message,
+      validation: err.errors,
+      path: req.path,
+      timestamp: new Date().toISOString()
+    }
   });
 };
-
-export default errorHandler;

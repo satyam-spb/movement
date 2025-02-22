@@ -4,39 +4,64 @@ import { validationResult } from 'express-validator';
 const DEFAULT_USER_ID = '67a4af8c2332ec00fc5c0873'; // Replace with a valid user ID from your database. remove this when the login is implemented
 
 // Create a new task
+// export const createTask = async (req, res) => {
+//     console.log("CreateTask function called");
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         console.log("Validation errors:", errors.array());
+//         return res.status(400).json({ errors: errors.array() });
+//     }
+
+//     try {
+//         const { title, description, betAmount, duration, participants } = req.body;
+//         console.log("Request body:", req.body);
+
+//         const task = await Task.create({
+//             title,
+//             description,
+//             betAmount,
+//             duration,
+//             creator: req.user.privyId, 
+//             participants: participants
+//         });
+
+//         console.log("Task created successfully:", task);
+//         res.status(201).json(task);
+//     } catch (error) {
+//         console.error("Error creating task:", error);
+//         res.status(500).json({ message: 'Server error', error: error.message });
+//     }
+// };
+
 export const createTask = async (req, res) => {
-    console.log("CreateTask function called");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        console.log("Validation errors:", errors.array());
-        return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
-
+  
     try {
-        const { title, description, betAmount, duration, participants } = req.body;
-        console.log("Request body:", req.body);
-
-        const task = await Task.create({
-            title,
-            description,
-            betAmount,
-            duration,
-            //to be edited
-            creator: DEFAULT_USER_ID, // Use the default user ID. Remove this and make it blank once implemented the login
-            participants: participants
-        });
-
-        console.log("Task created successfully:", task);
-        res.status(201).json(task);
+      const { title, description, betAmount, duration, participants } = req.body;
+      
+      const task = await Task.create({
+        title,
+        description,
+        betAmount,
+        duration,
+        creator: req.user.privyId, // Use authenticated user's privyId
+        participants
+      });
+  
+      res.status(201).json(task);
     } catch (error) {
-        console.error("Error creating task:", error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+      console.error("Error creating task:", error);
+      res.status(500).json({ message: 'Server error' });
     }
-};
+  };
+
 // Get all tasks
 export const getAllTasks = async (req, res) => {
     try {
-        const tasks = await Task.find({}).populate('creator', 'name email').populate('participants', 'name email'); // Populate creator and participants details
+        const tasks = await Task.find({});
         res.json(tasks);
     } catch (error) {
         console.error(error);
@@ -47,8 +72,10 @@ export const getAllTasks = async (req, res) => {
 // Delete a task
 export const deleteTask = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
-
+        const task = await Task.findOne({
+            _id: req.params.id,
+            creator: req.user.privyId
+          });
         if (!task) {
             return res.status(404).json({ message: 'Task not found' });
         }
@@ -62,31 +89,60 @@ export const deleteTask = async (req, res) => {
     }
 };
 // Select a trustworthy person for a task
+// export const selectTrustworthyPerson = async (req, res) => {
+//     try {
+//         const { taskId, trustworthyPersonId } = req.body;
+
+//         const task = await Task.findById(taskId);
+
+//         if (!task) {
+//             return res.status(404).json({ message: 'Task not found' });
+//         }
+
+
+//         if (!task.participants.includes(trustworthyPersonId)) {
+//             return res.status(400).json({ error: 'Invalid participant' });
+//           }
+//         // Update the task with the selected trustworthy person
+//         task.trustworthyPerson = trustworthyPersonId;
+//         await task.save();
+
+//         res.json({ message: 'Trustworthy person selected' });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// };
+
 export const selectTrustworthyPerson = async (req, res) => {
     try {
-        const { taskId, trustworthyPersonId } = req.body;
-
-        const task = await Task.findById(taskId);
-
-        if (!task) {
-            return res.status(404).json({ message: 'Task not found' });
-        }
-
-        // Update the task with the selected trustworthy person
-        task.trustworthyPerson = trustworthyPersonId;
-        await task.save();
-
-        res.json({ message: 'Trustworthy person selected' });
+      const { taskId, trustworthyPersonId } = req.body;
+      const userId = req.user.privyId;
+  
+      const task = await Task.findOne({
+        _id: taskId,
+        creator: userId // Verify task ownership
+      });
+  
+      if (!task) return res.status(404).json({ error: 'Task not found' });
+      if (!task.participants.includes(trustworthyPersonId)) {
+        return res.status(400).json({ error: 'Invalid participant' });
+      }
+  
+      task.trustworthyPerson = trustworthyPersonId;
+      await task.save();
+      
+      res.json({ message: 'Trustworthy person selected' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
     }
-};
+  };
 
 // Get task by ID
 export const getTaskById = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id).populate('creator', 'name email').populate('participants', 'name email');
+        const task = await Task.findById(req.params.id);
         if (!task) {
             return res.status(404).json({ message: 'Task not found' });
         }
@@ -100,20 +156,22 @@ export const getTaskById = async (req, res) => {
 // Update a task
 export const updateTask = async (req, res) => {
     try {
-        const task = await Task.findById(req.params.id);
-
-        if (!task) {
-            return res.status(404).json({ message: 'Task not found' });
-        }
-
-        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true
-        });
-
-        res.json(updatedTask);
+      const task = await Task.findOne({
+        _id: req.params.id,
+        creator: req.user.privyId
+      });
+      
+      if (!task) return res.status(404).json({ error: 'Task not found' });
+      
+      const updatedTask = await Task.findByIdAndUpdate(
+        req.params.id, 
+        req.body, 
+        { new: true, runValidators: true }
+      );
+      
+      res.json(updatedTask);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
     }
-};
+  };

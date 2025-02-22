@@ -3,13 +3,23 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { useLocation } from 'react-router-dom';
 
 import './styles/login.css';
 
 const Login = () => {
+  const location = useLocation(); 
   const { login, authenticated, logout } = usePrivy();
   const navigate = useNavigate();
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    console.log('Login - Location State:', location.state);
+    if (authenticated) {
+      const from = location.state?.from?.pathname || '/home';
+      navigate(from, { replace: true });
+    }
+  }, [authenticated, location, navigate]);
 
 
   useEffect(() => {

@@ -6,6 +6,8 @@ import morgan from 'morgan';
 import * as dotenv from 'dotenv' 
 import path from 'path'
 import { fileURLToPath } from 'url';
+import errorHandler from './middlewares/errorHandler.js';
+
 
 import userRoutes from './routes/userRoutes.js';
 import taskRoutes from './routes/taskRoutes.js'; 
@@ -30,6 +32,9 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes); 
+
+//error handler
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

@@ -9,7 +9,7 @@ import { ConnectButton, WalletProvider } from "@razorlabs/razorkit";
 
 
 const Home = () => {
-    const { user, authenticated } = usePrivy();
+    const { user, authenticated, getAccessToken } = usePrivy();
     const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const containerRef = useRef(null);
@@ -28,27 +28,40 @@ const Home = () => {
 
     // Fetch user profile and tasks
     useEffect(() => {
-        const fetchUserProfile = async () => {
-            if (authenticated && user?.privyUserId) {
-                try {
-                    const response = await api.get('/users/profile', {
-                        headers: { 'privy-user-id': user.privyUserId }
-                    });
-                    setRewardData(response.data.rewardModel);
-                } catch (error) {
-                    console.error("Error fetching user profile:", error);
-                }
-            }
-        };
+        //fetch user profile by directly sending privyUserId
+        // const fetchUserProfile = async () => {
+        //     if (authenticated && user?.privyUserId) {
+        //         try {
+        //             const response = await api.get('/users/profile', {
+        //                 headers: { 'privy-user-id': user.privyUserId }
+        //             });
+        //             setRewardData(response.data.rewardModel);
+        //         } catch (error) {
+        //             console.error("Error fetching user profile:", error);
+        //         }
+        //     }
+        // };
+        
 
-        const fetchTasks = async () => {
+        //fetching user profile by privy verification
+        const fetchUserProfile = async () => {
             try {
-                const response = await api.get('/tasks');
-                setTasks(response.data);
+              const response = await api.get('/api/users/profile');
+              setRewardData(response.data.rewardModel);
             } catch (error) {
-                console.error("Error fetching tasks:", error);
+              console.error("Profile fetch failed:", error);
             }
-        };
+          };
+
+        
+          const fetchTasks = async () => {
+            try {
+              const response = await api.get('/api/tasks');
+              setTasks(response.data);
+            } catch (error) {
+              console.error("Error fetching tasks:", error);
+            }
+          };
 
         fetchUserProfile();
         fetchTasks();
@@ -57,7 +70,7 @@ const Home = () => {
     // Function to select a trustworthy person for a task
     const handleSelectTrustworthyPerson = async (taskId, trustworthyPersonId) => {
         try {
-            await api.post('/tasks/selectTrustworthy', { taskId, trustworthyPersonId });
+            await api.post('api/tasks/selectTrustworthy', { taskId, trustworthyPersonId });
             setSelectedTrustworthyPerson(prev => ({ ...prev, [taskId]: trustworthyPersonId }));
             alert('Trustworthy person selected successfully!');
         } catch (error) {
@@ -342,7 +355,12 @@ const Home = () => {
                         <p>Want to create a custom bet? Click below to set your own rules!</p>
                         <button
                             className="create-bet-btn"
-                            onClick={() => (window.location.href = '/create-bet')}
+                            onClick={() => {
+                                        (window.location.href = '/create-bet')
+                                        console.log('Authenticated:', authenticated);
+                                        console.log('User:', user);
+                                    }
+                                }
                         >
                             Create Bet
                         </button>
