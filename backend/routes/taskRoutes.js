@@ -10,6 +10,8 @@ import {
 //to be edited
 // import { authenticateToken } from '../middlewares/authMiddleware.js'; Remove this
 import { body } from 'express-validator';
+import { verifyPrivyToken } from '../middlewares/authMiddleware.js';
+
 
 const taskRoutes = express.Router();
 
@@ -22,8 +24,7 @@ const taskValidationRules = [
 ];
 
 // Create a new task (protected route)
-//to be edited
-taskRoutes.post('/', taskValidationRules, createTask); //Remove Authenticate token
+taskRoutes.post('/', verifyPrivyToken, taskValidationRules, createTask);
 
 // Select a trustworthy person for the task
 taskRoutes.post('/selectTrustworthy', selectTrustworthyPerson);
@@ -35,9 +36,9 @@ taskRoutes.get('/', getAllTasks);
 taskRoutes.get('/:id', getTaskById);
 
 // Update a task (protected route)
-taskRoutes.put('/:id', updateTask);
+taskRoutes.put('/:id', verifyPrivyToken, updateTask);
 
-// Delete a task (protected route)
-taskRoutes.delete('/:id', deleteTask);
+//delete a task
+taskRoutes.delete('/:id', verifyPrivyToken, deleteTask);
 
 export default taskRoutes;

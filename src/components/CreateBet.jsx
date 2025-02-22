@@ -24,9 +24,7 @@ const CreateBet = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await api.get('/users/profile', {
-
-                });
+                const response = await api.get('api/users');
                 setAvailableUsers([response.data]); // Store available users
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -50,7 +48,7 @@ const CreateBet = () => {
             // Create the bet with selected participants
             const response = await api.post('/tasks', {
                 ...formData,
-                participants: participants.map(part => part._id) // Send only the IDs of participants
+                participants: participants.map(part => part.privyId) // Send only the IDs of participants
             });
 
             setGroupCode(generateGroupCode()); // Generate group code

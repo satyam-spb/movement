@@ -1,5 +1,5 @@
-const logger = (req,res,next) => {
-    a = 0; //just a random line for function
-}
 
-export default logger;
+const logger = (req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+  };
