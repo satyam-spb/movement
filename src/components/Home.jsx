@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+// Home.jsx
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './styles/home.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faBars,faFutbol, faTableTennisPaddleBall, faBasketball, faBaseballBatBall, faFootball,faHockeyPuck,faVolleyball,faHandBackFist,faDumbbell,faHandshakeSlash,faArrowsToCircle,faHourglassHalf,faTrophy} from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +7,7 @@ import {faCircleXmark} from '@fortawesome/free-regular-svg-icons';
 import api from '../api.js';
 import { usePrivy } from '@privy-io/react-auth';
 import { ConnectButton, WalletProvider } from "@razorlabs/razorkit";
+import { useNavigate } from 'react-router-dom';
 
 
 const Home = () => {
@@ -25,24 +27,10 @@ const Home = () => {
     const [tasks, setTasks] = useState([]);
     const [selectedTrustworthyPerson, setSelectedTrustworthyPerson] = useState({});
     const { logout } = usePrivy();
+    const navigate = useNavigate();
 
     // Fetch user profile and tasks
     useEffect(() => {
-        //fetch user profile by directly sending privyUserId
-        // const fetchUserProfile = async () => {
-        //     if (authenticated && user?.privyUserId) {
-        //         try {
-        //             const response = await api.get('/users/profile', {
-        //                 headers: { 'privy-user-id': user.privyUserId }
-        //             });
-        //             setRewardData(response.data.rewardModel);
-        //         } catch (error) {
-        //             console.error("Error fetching user profile:", error);
-        //         }
-        //     }
-        // };
-        
-
         //fetching user profile by privy verification
         const fetchUserProfile = async () => {
             try {
@@ -54,14 +42,14 @@ const Home = () => {
           };
 
         
-          const fetchTasks = async () => {
+        const fetchTasks = async () => {
             try {
-              const response = await api.get('/api/tasks');
-              setTasks(response.data);
+                const response = await api.get('/api/tasks');
+                setTasks(response.data);
             } catch (error) {
-              console.error("Error fetching tasks:", error);
+                console.error("Error fetching tasks:", error);
             }
-          };
+        };
 
         fetchUserProfile();
         fetchTasks();
@@ -171,7 +159,7 @@ const Home = () => {
                         try {
                             await logout();
                             console.log("User logged out successfully!");
-                            window.location.href = "/"; // Redirect to homepage or login page
+                            navigate("/"); // Redirect to homepage or login page
                         } catch (error) {
                             console.error("Logout failed:", error);
                         }
@@ -340,51 +328,20 @@ const Home = () => {
                         ) : (
                             placedBets.map((bet) => (
                                 <div key={bet.date} className={`bet-result ${bet.status}`}>
-                                    <p>
-                                    <FontAwesomeIcon icon={faHourglassHalf} />
-                                        Placed Bet - {bet.title}
-                                    </p>
-                                    <span className="reward">Amount: ${bet.amount}</span>
+                                    <h4>{bet.title}</h4>
+                                    <p>Amount: ${bet.amount}</p>
+                                    <p>Status: {bet.status}</p>
+                                    <p>Date: {new Date(bet.date).toLocaleDateString()}</p>
                                 </div>
                             ))
                         )}
                     </div>
-
-                    <h3>Create Your Own Bet</h3>
-                    <div className="create-bet-section">
-                        <p>Want to create a custom bet? Click below to set your own rules!</p>
-                        <button
-                            className="create-bet-btn"
-                            onClick={() => {
-                                        (window.location.href = '/create-bet')
-                                        console.log('Authenticated:', authenticated);
-                                        console.log('User:', user);
-                                    }
-                                }
-                        >
-                            Create Bet
-                        </button>
-                    </div>
-
-                    <h3>Previous Bets</h3>
-                    <div className="previous-bets">
-                        <div className="bet-result won">
-                            <p>
-                            <FontAwesomeIcon icon={faTrophy} />
-                                Bet 1: WON - LinkedIn Post Reactions
-                            </p>
-                            <span className="reward">Reward: $500</span>
-                        </div>
-                        <div className="bet-result lost">
-                            <p>
-                                <FontAwesomeIcon icon={faCircleXmark} />
-                                Bet 2: LOST - Instagram Story Views
-                            </p>
-                            <span className="reward">Loss: $200</span>
-                        </div>
-                    </div>
                 </div>
             </section>
+
+            <footer>
+                <p>&copy; 2025 Prediction Market</p>
+            </footer>
         </div>
     );
 };

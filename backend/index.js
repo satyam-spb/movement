@@ -6,7 +6,7 @@ import morgan from 'morgan';
 import * as dotenv from 'dotenv' 
 import path from 'path'
 import { fileURLToPath } from 'url';
-import errorHandler from './middlewares/errorHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 
 import userRoutes from './routes/userRoutes.js';

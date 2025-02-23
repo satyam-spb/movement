@@ -1,3 +1,4 @@
+//taskRoutes.js
 import express from 'express';
 import {
     createTask,
@@ -11,6 +12,7 @@ import {
 // import { authenticateToken } from '../middlewares/authMiddleware.js'; Remove this
 import { body } from 'express-validator';
 import { verifyPrivyToken } from '../middlewares/authMiddleware.js';
+import { createBet } from '../controllers/SmartContractController.js'
 
 
 const taskRoutes = express.Router();
@@ -25,6 +27,9 @@ const taskValidationRules = [
 
 // Create a new task (protected route)
 taskRoutes.post('/', verifyPrivyToken, taskValidationRules, createTask);
+
+// Smart contract interaction route
+taskRoutes.post('/smart-contract/create-bet', verifyPrivyToken, createBet);
 
 // Select a trustworthy person for the task
 taskRoutes.post('/selectTrustworthy', selectTrustworthyPerson);
