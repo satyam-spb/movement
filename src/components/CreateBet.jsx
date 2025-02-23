@@ -1,14 +1,9 @@
-// frontend/components/CreateBet.jsx
-import { useState, useEffect } from 'react';
-import './styles/create-bet.css'; 
+//CreateBet.jsx
+import React, { useState, useEffect } from 'react';
+import './styles/create-bet.css';
 import api from '../api.js';
-//to be edited
-// import { usePrivy } from '@privy-io/react-auth'; //Remove usePrivy from here as well
 
 const CreateBet = () => {
-    //to be edited
-    // const { user, authenticated } = usePrivy(); //Remove UsePrivy here
-
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -18,72 +13,78 @@ const CreateBet = () => {
     const [groupCode, setGroupCode] = useState('-');
     const [participants, setParticipants] = useState([]);
     const [availableUsers, setAvailableUsers] = useState([]);
+    const [transactionResult, setTransactionResult] = useState(null);
 
-    // Remove useeffect with UserProfile info it is not longer needed with usePrivy;
-    // Load available users on component mount
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const response = await api.get('api/users');
-                setAvailableUsers([response.data]); // Store available users
+                setAvailableUsers([response.data]);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
         };
         fetchUsers();
-
     }, []);
 
-    // Handle changes in form inputs
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData(prev => ({ ...prev, [id]: value }));
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // Create the bet with selected participants
+            // Call the backend endpoint to create the bet
             const response = await api.post('/tasks', {
                 ...formData,
-                participants: participants.map(part => part.privyId) // Send only the IDs of participants
+                participants: participants.map(part => part.privyId)
             });
 
-            setGroupCode(generateGroupCode()); // Generate group code
-            alert("Bet successfully created!");
-            setFormData({ // Reset form
-                title: '',
-                description: '',
-                betAmount: '',
-                duration: ''
-            });
-            setParticipants([]); // Reset participants
+            if (response.status === 201) {
+                // Call your smart contract interaction function here
+                const betDetails = response.data; // Extract relevant bet details from the API response
+                const contractResult = await api.post('/api/smart-contract/create-bet', {
+                    title: betDetails.title,
+                    duration: betDetails.duration,
+                    amount: betDetails.betAmount
+                });
+
+                setTransactionResult(contractResult.data);
+
+                setGroupCode(generateGroupCode());
+                alert("Bet successfully created!");
+                setFormData({
+                    title: '',
+                    description: '',
+                    betAmount: '',
+                    duration: ''
+                });
+                setParticipants([]);
+            } else {
+                throw new Error("Failed to create bet.");
+            }
         } catch (error) {
             console.error("Error creating bet:", error);
             alert("Failed to create bet.");
         }
     };
 
-    // Generate a random group code
     const generateGroupCode = () => Array.from({ length: 6 }, () =>
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]
     ).join('');
 
-    // Handle adding a participant
     const handleAddParticipant = (user) => {
         if (!participants.find(part => part._id === user._id)) {
             setParticipants(prev => [...prev, user]);
         }
     };
 
-    // Handle removing a participant
     const handleRemoveParticipant = (userId) => {
         setParticipants(prev => prev.filter(part => part._id !== userId));
     };
 
-    // Handle sharing the group code
     const handleShareCode = () => {
         if (navigator.share) {
             navigator.share({
@@ -95,7 +96,6 @@ const CreateBet = () => {
         }
     };
 
-    // Handle copying the group code to clipboard
     const handleCopyCode = () => {
         navigator.clipboard.writeText(groupCode)
             .then(() => alert(`Copied: ${groupCode}`))
@@ -192,6 +192,17 @@ const CreateBet = () => {
                 <button onClick={handleCopyCode}>Copy Code</button>
                 <button onClick={handleShareCode}>Share Code</button>
             </div>
+             {transactionResult && (
+                <div className="transaction-result">
+                    <h3>Transaction Result:</h3>
+                    <p>Status: {transactionResult.success ? 'Success' : 'Failed'}</p>
+                    {transactionResult.success ? (
+                        <p>Transaction Hash: {transactionResult.transactionHash}</p>
+                    ) : (
+                        <p>Error: {transactionResult.error}</p>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
