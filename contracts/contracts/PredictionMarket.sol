@@ -12,30 +12,52 @@ contract PredictionMarket {
     }
 
     Bet[] public bets;
-    
+
+    address private platformAddress; // Address to receive fees
+    uint256 private feePercentage; // Percentage of bets to be taken as fees
+
     event BetCreated(uint256 betId, address creator, string title, uint256 amount);
     event BetJoined(uint256 betId, address participant);
     event BetResolved(uint256 betId, address winner);
 
+    constructor() {
+        platformAddress = 0x...; // Set the platform address (replace with actual address)
+        feePercentage = 5; // Example: 5% fee
+    }
+
     function createBet(string memory _title, uint256 _duration) external payable {
         require(msg.value > 0, "Bet amount must be greater than 0");
         
+        // Calculate and transfer fee to platform
+        uint256 feeAmount = (msg.value * feePercentage) / 100;
+        payable(platformAddress).transfer(feeAmount);
+
+        // Adjust bet amount after deducting fee
+        uint256 adjustedBetAmount = msg.value - feeAmount;
+
         bets.push(Bet({
             creator: msg.sender,
             title: _title,
-            amount: msg.value,
+            amount: adjustedBetAmount,
             deadline: block.timestamp + _duration,
             resolved: false,
             participants: new address[](0)
-        })); // Fixed: Added the missing closing parenthesis
-        
-        emit BetCreated(bets.length - 1, msg.sender, _title, msg.value);
+        }));
+
+        emit BetCreated(bets.length - 1, msg.sender, _title, adjustedBetAmount);
     }
 
     function joinBet(uint256 _betId) external payable {
         Bet storage bet = bets[_betId];
         require(msg.value == bet.amount, "Must match bet amount");
         require(block.timestamp < bet.deadline, "Bet deadline passed");
+
+        // Calculate and transfer fee to platform
+        uint256 feeAmount = (msg.value * feePercentage) / 100;
+        payable(platformAddress).transfer(feeAmount);
+
+        // Adjust bet amount after deducting fee
+        uint256 adjustedBetAmount = msg.value - feeAmount;
 
         bet.participants.push(msg.sender);
         emit BetJoined(_betId, msg.sender);

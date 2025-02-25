@@ -1,5 +1,4 @@
-// Home.jsx
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import './styles/home.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faBars,faFutbol, faTableTennisPaddleBall, faBasketball, faBaseballBatBall, faFootball,faHockeyPuck,faVolleyball,faHandBackFist,faDumbbell,faHandshakeSlash,faArrowsToCircle,faHourglassHalf,faTrophy} from '@fortawesome/free-solid-svg-icons';
@@ -7,11 +6,9 @@ import {faCircleXmark} from '@fortawesome/free-regular-svg-icons';
 import api from '../api.js';
 import { usePrivy } from '@privy-io/react-auth';
 import { ConnectButton, WalletProvider } from "@razorlabs/razorkit";
-import { useNavigate } from 'react-router-dom';
-
 
 const Home = () => {
-    const { user, authenticated, getAccessToken } = usePrivy();
+    const { user, authenticated, getAccessToken, logout } = usePrivy();
     const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const containerRef = useRef(null);
@@ -23,15 +20,11 @@ const Home = () => {
     const [selectedBet, setSelectedBet] = useState(null);
     const [betInput, setBetInput] = useState('');
     const [placedBets, setPlacedBets] = useState([]);
-    const [rewardData, setRewardData] = useState(null); // Reward data state
+    const [rewardData, setRewardData] = useState(null); 
     const [tasks, setTasks] = useState([]);
     const [selectedTrustworthyPerson, setSelectedTrustworthyPerson] = useState({});
-    const { logout } = usePrivy();
-    const navigate = useNavigate();
 
-    // Fetch user profile and tasks
     useEffect(() => {
-        //fetching user profile by privy verification
         const fetchUserProfile = async () => {
             try {
               const response = await api.get('/api/users/profile');
@@ -41,13 +34,12 @@ const Home = () => {
             }
           };
 
-        
         const fetchTasks = async () => {
             try {
-                const response = await api.get('/api/tasks');
-                setTasks(response.data);
+              const response = await api.get('/api/tasks');
+              setTasks(response.data);
             } catch (error) {
-                console.error("Error fetching tasks:", error);
+              console.error("Error fetching tasks:", error);
             }
         };
 
@@ -55,7 +47,6 @@ const Home = () => {
         fetchTasks();
     }, [authenticated, user]);
 
-    // Function to select a trustworthy person for a task
     const handleSelectTrustworthyPerson = async (taskId, trustworthyPersonId) => {
         try {
             await api.post('api/tasks/selectTrustworthy', { taskId, trustworthyPersonId });
@@ -159,7 +150,7 @@ const Home = () => {
                         try {
                             await logout();
                             console.log("User logged out successfully!");
-                            navigate("/"); // Redirect to homepage or login page
+                            window.location.href = "/"; 
                         } catch (error) {
                             console.error("Logout failed:", error);
                         }
@@ -245,8 +236,7 @@ const Home = () => {
                         onMouseLeave={handleMouseLeave}
                         onMouseMove={handleMouseMove}
                     >
-                        <div
-                            className="container"
+                        <div className="container"
                             style={{
                                 transform: `translateX(-${scrollPos}px)`,
                                 transition: isDragging ? 'none' : 'transform 0.03s linear'
@@ -328,20 +318,50 @@ const Home = () => {
                         ) : (
                             placedBets.map((bet) => (
                                 <div key={bet.date} className={`bet-result ${bet.status}`}>
-                                    <h4>{bet.title}</h4>
-                                    <p>Amount: ${bet.amount}</p>
-                                    <p>Status: {bet.status}</p>
-                                    <p>Date: {new Date(bet.date).toLocaleDateString()}</p>
+                                    <p>
+                                    <FontAwesomeIcon icon={faHourglassHalf} />
+                                        Placed Bet - {bet.title}
+                                    </p>
+                                    <span className="reward">Amount: ${bet.amount}</span>
                                 </div>
                             ))
                         )}
                     </div>
+
+                    <h3>Create Your Own Bet</h3>
+                    <div className="create-bet-section">
+                        <p>Want to create a custom bet? Click below to set your own rules!</p>
+                        <button
+                            className="create-bet-btn"
+                            onClick={() => {
+                                window.location.href = '/create-bet';
+                                console.log('Authenticated:', authenticated);
+                                console.log('User:', user);
+                            }}
+                        >
+                            Create Bet
+                        </button>
+                    </div>
+
+                    <h3>Previous Bets</h3>
+                    <div className="previous-bets">
+                        <div className="bet-result won">
+                            <p>
+                            <FontAwesomeIcon icon={faTrophy} />
+                                Bet 1: WON - LinkedIn Post Reactions
+                            </p>
+                            <span className="reward">Reward: $500</span>
+                        </div>
+                        <div className="bet-result lost">
+                            <p>
+                                <FontAwesomeIcon icon={faCircleXmark} />
+                                Bet 2: LOST - Instagram Story Views
+                            </p>
+                            <span className="reward">Loss: $200</span>
+                        </div>
+                    </div>
                 </div>
             </section>
-
-            <footer>
-                <p>&copy; 2025 Prediction Market</p>
-            </footer>
         </div>
     );
 };
