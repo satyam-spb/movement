@@ -1,15 +1,15 @@
 // backend/controllers/userController.js
 import User from '../models/user.js';
 
-// Register a new user
-export const registerUser = async (req, res) => {
-    // Registration logic here...
-};
+// // Register a new user
+// export const registerUser = async (req, res) => {
+//     // Registration logic here...
+// };
 
-// Get user profile
-export const getUserProfile = async (req, res) => {
-    // Profile fetching logic here...
-};
+// // Get user profile
+// export const getUserProfile = async (req, res) => {
+//     // Profile fetching logic here...
+// };
 
 const DEFAULT_REWARD_MODEL = {
   betAmount: 0,
@@ -18,6 +18,21 @@ const DEFAULT_REWARD_MODEL = {
   profitLoss: 0
 };
 
+export const getAllUsers = async (req, res) => {
+  try {
+      const users = await User.find().select('name email _id'); // Select fields you need
+      
+      res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+      res.set("Pragma", "no-cache");
+      res.set("Expires", "0");
+      
+      res.json(users);
+
+  } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: 'Failed to fetch users' });
+  }
+};
 // Get userId or create new using privy auth
 export const getOrCreateUser = async (req, res) => {
     try {
