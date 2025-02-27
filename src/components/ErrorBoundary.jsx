@@ -1,4 +1,23 @@
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
+
+// Separate component for handling Privy errors
+const PrivyErrorListener = () => {
+  const { logout } = usePrivy();
+
+  useEffect(() => {
+    const handleAuthErrors = (event) => {
+      if (event.detail?.error?.code === 'SESSION_EXPIRED') {
+        logout();
+      }
+    };
+
+    window.addEventListener('privy:error', handleAuthErrors);
+    return () => window.removeEventListener('privy:error', handleAuthErrors);
+  }, [logout]);
+
+  return null;
+};
 
 class ErrorBoundary extends Component {
   state = { hasError: false };
@@ -23,7 +42,12 @@ class ErrorBoundary extends Component {
       );
     }
 
-    return this.props.children;
+    return (
+      <>
+        <PrivyErrorListener />
+        {this.props.children}
+      </>
+    );
   }
 }
 

@@ -2,6 +2,20 @@
 import User from '../models/user.js';
 import { PrivyClient } from '@privy-io/server-auth';
 
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+dotenv.config({ path: path.join(__dirname, '.env') });
+// If PRIVY_APP_ID is still undefined, try the root folder
+if (!process.env.PRIVY_APP_ID) {
+  dotenv.config({ path: path.join(__dirname, '../.env') });
+}
+
 // Debug Privy configuration - adding more detail to help diagnose
 console.log('Privy Configuration in authMiddleware:');
 console.log('PRIVY_APP_ID:', process.env.PRIVY_APP_ID);

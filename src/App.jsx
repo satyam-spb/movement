@@ -7,6 +7,10 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
+import { Buffer } from 'buffer';
+import { PrivyProvider } from '@privy-io/react-auth';
+
+window.Buffer = Buffer;
 
 function App() {
   const { getAccessToken, authenticated, ready } = usePrivy();
@@ -23,6 +27,41 @@ function App() {
   }, [ready, authenticated]);
 
   return (
+    <PrivyProvider
+      appId="cm7b9ly1800ocj4cjh8awayjj"
+      config={{
+        loginMethods:[
+          'email',
+          'google',
+          'apple',
+          'github',
+          'twitter',
+          'discord',
+          'linkedin',
+          'facebook',
+          'wallet'
+        ],
+        appearance: {
+          theme: 'light',
+          accentColor: '#676FFF'
+        },
+        embeddedWallets: {
+          createOnLogin: 'users-without-wallets'
+        },
+        // Required for social logins
+        oauthOptions: {
+          providers: [
+            'google',
+            'apple',
+            'github',
+            'twitter', 
+            'discord',
+            'linkedin',
+            'facebook'
+          ]
+        }
+      }}
+    >
     <ErrorBoundary>
       <Router>
         <Routes>
@@ -35,6 +74,7 @@ function App() {
         </Routes>
       </Router>
     </ErrorBoundary>
+    </PrivyProvider>
   );
 }
 
