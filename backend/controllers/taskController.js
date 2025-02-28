@@ -4,12 +4,16 @@ import { validationResult } from 'express-validator';
 
 // Create a new task/bet
 export const createTask = async (req, res) => {
+  console.log("In create task");
+  
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
+    console.log("task validated");
+    
     const { 
       title, 
       description, 
@@ -17,17 +21,24 @@ export const createTask = async (req, res) => {
       duration, 
       participants, 
       trustworthyPerson, 
-      groupCode,
-      creatorPrivyId 
+      groupCode
     } = req.body;
 
-    // Find the user by Privy ID
-    const user = await User.findOne({ privyId: creatorPrivyId });
+    console.log("data received - taskController");
+    
 
+    // Get creatorPrivyId from authenticated user
+    const creatorPrivyId = req.user.privyId; // Changed from req.body to req.user
+    console.log("privy id of cretor : ", creatorPrivyId);
+    
+
+    const user = await User.findOne({ privyId: creatorPrivyId });
     if (!user) {
-      return res.status(404).json({ message: 'User not found with the provided Privy ID' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
+    console.log('craeting task');
+    
     // Create the task/bet
     const task = new Task({
       title,
@@ -39,8 +50,11 @@ export const createTask = async (req, res) => {
       trustworthyPerson,
       groupCode
     });
+    console.log("Task created");
+    
 
     await task.save();
+    console.log("task saved");
     
     // Return the created task with populated user information
     const populatedTask = await Task.findById(task._id)

@@ -15,6 +15,8 @@ import { body } from 'express-validator';
 import { verifyPrivyToken } from '../middlewares/authMiddleware.js';
 
 const taskRoutes = express.Router();
+console.log("In the task routes");
+
 
 // Validation rules for task creation
 const taskValidationRules = [
@@ -24,10 +26,15 @@ const taskValidationRules = [
     body('participants').isArray().withMessage('Participants must be an array')
 ];
 
+console.log("Task validated");
+
+
 // Get all available users
 taskRoutes.get('/users', getAllUsers);
 
 // Create a new task (protected route)
+console.log("Just before task post");
+
 taskRoutes.post('/', verifyPrivyToken, taskValidationRules, createTask);
 
 // Join a bet group using group code

@@ -38,28 +38,53 @@ const CreateBet = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
-        if (!formData.title || !formData.description || !formData.betAmount || !formData.duration) {
-            alert('Please fill all required fields');
-            setIsSubmitting(false);
-            return;
-        }
-
+    
         try {
+            // Basic frontend validation
+            if (!formData.title || !formData.betAmount || !formData.duration) {
+                throw new Error('Please fill in all required fields');
+            }
+    
+            // Generate group code first
             const code = generateGroupCode();
+            console.log("group code generated",code);
             
-            await api.post('/tasks', {
-                ...formData,
-                participants: participants.map(part => part.privyId),
+    
+            // Prepare payload matching backend expectations
+            const betData = {
+                title: formData.title,
+                description: formData.description || '', // Ensure description exists
+                betAmount: Number(formData.betAmount),
+                duration: Number(formData.duration),
+                participants : [],
                 groupCode: code
-            });
+            };
+            console.log("bet data : ",betData);
+            
 
-            alert("Bet created successfully! Share the group code with participants.");
-            setFormData({ title: '', description: '', betAmount: '', duration: '' });
-            setParticipants([]);
+    
+            // Make API call using your configured axios instance
+            const response = await api.post('/api/tasks', betData);
+            console.log("api call made");
+            
+    
+            if (response.status === 201) {
+                alert('Bet created successfully! Share the group code: ' + code);
+                setFormData({ title: '', description: '', betAmount: '', duration: '' });
+                setParticipants([]);
+                setGroupCode(code);
+            }
         } catch (error) {
-            console.error("Error creating bet:", error);
-            alert("Failed to create bet");
+            console.error('Bet creation error:', error);
+            
+            // Handle API validation errors from express-validator
+            const backendError = error.response?.data?.error;
+            const errorMessage = backendError?.validation?.join('\n') || 
+                               backendError?.message || 
+                               error.message || 
+                               'Failed to create bet. Please try again.';
+            
+            alert(errorMessage);
         } finally {
             setIsSubmitting(false);
         }
@@ -72,11 +97,11 @@ const CreateBet = () => {
         }
 
         const shareText = `🏆 Join my bet: ${formData.title || "Exciting Opportunity"}!\n
-📝 ${formData.description || "Test your prediction skills"}\n
-💰 Bet Amount: $${formData.betAmount}\n
-⏳ Duration: ${formData.duration} days\n
-🔑 Use Group Code: ${groupCode}\n
-👉 Let's compete!`;
+        📝 ${formData.description || "Test your prediction skills"}\n
+        💰 Bet Amount: $${formData.betAmount}\n
+        ⏳ Duration: ${formData.duration} days\n
+        🔑 Use Group Code: ${groupCode}\n
+        👉 Let's compete!`;
 
         if (navigator.share) {
             navigator.share({
@@ -141,7 +166,7 @@ const CreateBet = () => {
                         />
                     </div>
 
-                    <div className="participants-section">
+                    {/* <div className="participants-section">
                         <div className="form-group">
                             <label>Available Participants</label>
                             <div className="user-list">
@@ -178,7 +203,7 @@ const CreateBet = () => {
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <button 
                         type="submit" 

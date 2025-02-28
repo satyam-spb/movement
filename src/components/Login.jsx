@@ -77,7 +77,6 @@ const Login = () => {
         </section>
       </main>
 
-      {/* ... rest of your footer remains the same ... */}
     </div>
   );
 };
